@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<!-- Student: 0971040 Tadjiev Mukhammadkhon IWD JAVASCRIPT CLASS-->
+
+<head>
+    <title>
+        Midterm W2020
+    </title>
+    <style>
+        body {
+            background-color: seagreen;
+            color: white;
+            text-align: center;
+        }
+        
+        .amountStyle {
+            font-size: 48px;
+            font-weight: bolder;
+            padding: 5px;
+            color: yellow;
+        }
+    </style>
+</head>
+
+<body onload="startUpATM();">
+    <h1>
+        IWD Bank Machine
+    </h1>
+
+    <!-- Account Labels -->
+    <p class="amountStyle" id="pAccountType">[Account Type]</p>
+    <p class="amountStyle" id="pAccountAmount">$$$$</p>
+
+    <!-- Account Tools -->
+    <div>
+
+        <!-- Dropdown Menu -->
+        <div style="float: left; width: 50%;">
+            <h2>Account Selector:</h2>
+            <select id="ddAccountTypeMenu" onchange="chequingAction()">
+                    <option selected>Chequing</option>
+                    <option>Savings</option>
+                </select>
+        </div>
+
+        <!-- Transaction Tools -->
+        <div style="float: right; width: 50%;">
+            <h2>Transaction Tools:</h2><br> Amount: <input type="text" id="tbTransaction" placeholder="0000.00" />
+            <input type="button" value="Deposit" onclick="depositing()" />
+            <input type="button" value="Withdraw" onclick="withdrawing()" />
+        </div>
+
+    </div>
+
+    <!-- Log -->
+    <br><br><br><br><br><br><br><br>
+    <!-- Annoying Spacing -->
+    <p id="pTranactionLog">[Log]</p>
+
+    <!-- Javascript Code -->
+    <script>
+        /*
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                Global variables
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            */
+        var chequing = 450.0;
+        var savings = 5000.0;
+        var depositedAmount = 0;
+        var value = 0;
+        /*
+            This function will run when the page loads
+        */
+        function startUpATM() {
+            var display1 = document.getElementById("pAccountType").innerHTML = "Chequing";
+            var display2 = document.getElementById("pAccountAmount").innerHTML = "$ " + chequing;
+        }
+
+
+        function chequingAction() {
+            if (document.getElementById("ddAccountTypeMenu").selectedIndex === 0) {
+                //v ar display3 = document.getElementById("pTranactionLog").innerHTML = ;
+                var display3 = document.getElementById("pAccountType").innerHTML = "Chequing";
+                var display4 = document.getElementById("pAccountAmount").innerHTML = "$ " + chequing;
+
+            } else if (document.getElementById("ddAccountTypeMenu").selectedIndex === 1) {
+
+                var display5 = document.getElementById("pAccountType").innerHTML = "Savings ";
+                var display6 = document.getElementById("pAccountAmount").innerHTML = "$ " + savings;
+
+            }
+        }
+
+        /*
+
+                var i = 0;
+
+                function buttonClicking1Deposit() {
+                    var depositedAmount = document.getElementById('tbTransaction').value + savings;
+
+
+                    toTalDeposit = toTalDeposit + value;
+                    document.getElementById("pTranactionLog").innerHTML = value + " $ " + toTalDeposit + "Total Desposit" + "<br>";
+                }
+                if (depositedAmount < 10) {
+                    var errorMessaging = "Minimum $10 to deposit";
+
+                }
+
+        */
+        function depositing() {
+            var depositedAmount = document.getElementById('tbTransaction').value; // +savings
+            var display7 = document.getElementById("pTranactionLog");
+
+
+            if (depositedAmount < 10) {
+                var errorMessaging = "Minimum $10 to deposit";
+                display7.innerHTML = errorMessaging;
+            } else if (document.getElementById("ddAccountTypeMenu").selectedIndex === 0) {
+                chequing = parseFloat(chequing) + parseFloat(depositedAmount);
+                var depositedAmountToChequing = "Deposited: $ " + depositedAmount + " Chequing Account";
+                display7.innerHTML = depositedAmountToChequing;
+                chequingAction();
+
+            } else if (document.getElementById("ddAccountTypeMenu").selectedIndex === 1) {
+                savings = parseFloat(savings) + parseFloat(depositedAmount);
+                var depositedAmountToChequing = "Deposited: $ " + depositedAmount + " Savings Account";
+                display7.innerHTML = depositedAmountToChequing;
+                chequingAction();
+            }
+        }
+
+
+        function withdrawing() {
+            var withdrawingAmount = document.getElementById('tbTransaction').value; // +savings
+            var display8 = document.getElementById("pTranactionLog");
+            var messageError = "Insufficient funds";
+
+
+            if (document.getElementById("ddAccountTypeMenu").selectedIndex === 0) {
+                if (withdrawingAmount > chequing) {
+                    display8.innerHTML = messageError;
+                } else {
+                    chequing = parseFloat(chequing) - parseFloat(withdrawingAmount);
+                    var withdrawalAmountToChequing = "Withdrawal: $ " + withdrawingAmount + " Chequing Account";
+                    display8.innerHTML = withdrawalAmountToChequing;
+                    chequingAction();
+                }
+            }
+
+            if (document.getElementById("ddAccountTypeMenu").selectedIndex === 1) {
+                if (withdrawingAmount > savings) {
+                    display8.innerHTML = messageError;
+                } else {
+                    savings = parseFloat(savings) - parseFloat(withdrawingAmount);
+                    var withdrawingAmountToChequing = "Withdrawal: $ " + withdrawingAmount + " Savings Account";
+                    display8.innerHTML = withdrawingAmountToChequing;
+                    chequingAction();
+                }
+            }
+
+        }
+    </script>
+
+</body>
+
+</html>

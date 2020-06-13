@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Midterm W2020
+    </title>
+    <style>
+        body {
+            background-color: seagreen;
+            color: white;
+            text-align: center;
+        }
+        
+        .amountStyle {
+            font-size: 48px;
+            font-weight: bolder;
+            padding: 5px;
+            color: yellow;
+        }
+    </style>
+</head>
+
+<body onload="startUpATM();">
+    <h1>
+        IWD Bank Machine
+    </h1>
+
+    <!-- Account Labels -->
+    <p class="amountStyle" id="pAccountType">[Account Type]</p>
+    <p class="amountStyle" id="pAccountAmount">$$$$</p>
+
+    <!-- Account Tools -->
+    <div>
+
+        <!-- Dropdown Menu -->
+        <div style="float: left; width: 50%;">
+            <h2>Account Selector:</h2>
+            <select id="ddAccountTypeMenu" onchange="displayAccountInfo();">
+                    <option selected>Chequing</option>
+                    <option>Savings</option>
+                </select>
+        </div>
+
+        <!-- Transaction Tools -->
+        <div style="float: right; width: 50%;">
+            <h2>Transaction Tools:</h2><br> Amount: <input type="text" id="tbTransaction" placeholder="0000.00" />
+            <input type="button" value="Deposit" onclick="deposit();" />
+            <input type="button" value="Withdraw" onclick="withdraw();" />
+        </div>
+
+    </div>
+
+    <!-- Log -->
+    <br><br><br><br><br><br><br><br>
+    <!-- Annoying Spacing -->
+    <p id="pTranactionLog">[Log]</p>
+
+    <!-- Javascript Code -->
+    <script>
+        /*
+                                                Global variables
+                                            */
+        // These are the variables we will use to keep track of the account balances in the backend
+        var accntCheq = 450.0;
+        var accntSave = 5000.0;
+
+        // Elements - Global references help reduce the number of repetitive getElementById calls
+        var accntTypeLabel = document.getElementById("pAccountType");
+        var accntAmountLabel = document.getElementById("pAccountAmount");
+        var accntSelector = document.getElementById("ddAccountTypeMenu");
+        var transactionBox = document.getElementById("tbTransaction");
+        var transactionLog = document.getElementById("pTranactionLog");
+
+        /*
+            This function looks at the selected value in the dropdown menu
+            If Chequing is selected, the chequing account information is shown, otherwise, the savings is shown
+
+            Note: The logic inside of this function is utilized numerous times in our script, 
+                therefore this function can be called to update the webpage with the current account balances
+        */
+        function displayAccountInfo() {
+            if (accntSelector.value == "Chequing") {
+                accntTypeLabel.innerHTML = "Chequing";
+                accntAmountLabel.innerHTML = "$" + accntCheq.toFixed(2); // toFixed() is used to format the number to 2 decimal places, not required, but looks clean
+            } else if (accntSelector.value == "Savings") {
+                accntTypeLabel.innerHTML = "Savings";
+                accntAmountLabel.innerHTML = "$" + accntSave.toFixed(2);
+            }
+        }
+
+        /*
+            This function will run when the page loads
+        */
+        function startUpATM() {
+            // Since the chequing is selected by default, code inside of displayAccountInfo can use that to perform this step
+            displayAccountInfo();
+        }
+
+        /*
+            Deposit
+        */
+        function deposit() {
+            // Read the value inside the textbox, that value is in the type string, so we convert it using the parse function
+            var amount = parseFloat(transactionBox.value);
+
+            // If the number is less than 10, we notify the user and dont perform the transaction
+            if (amount < 10.0) {
+                pTranactionLog.innerHTML = "Minimum $10 to deposit"; // We output to the log to tell the user why the amount did not go through
+            } else {
+                // We need to know which account we are depositing to, so we check the dropdown menu value (value is the option that is selected)
+                if (accntSelector.value == "Chequing") {
+                    accntCheq = accntCheq + amount; // We apply the change to the selected account balance
+                    pTranactionLog.innerHTML = "Deposited: $" + amount.toFixed(2) + " to Chqguing"; // And then we output a message to the log
+                } else if (accntSelector.value == "Savings") {
+                    accntSave = accntSave + amount; // We apply the change to the selected account balance
+                    pTranactionLog.innerHTML = "Deposited: $" + amount.toFixed(2) + " to Savings"; // And then we output a message to the log
+                }
+            }
+            // We can call this function we made to display the current value of whatever account is selected to the webpage
+            displayAccountInfo();
+        }
+
+        /*
+            Withdraw
+        */
+        function withdraw() {
+            // Read the value inside the textbox, that value is in the type string, so we convert it using the parse function
+            var amount = parseFloat(transactionBox.value);
+
+            // We need to determine which account we are withdrawing from 
+            if (accntSelector.value == "Chequing") {
+                // We check that the amout to withdraw is not more than the balance in the account, here we use the chequing balance
+                if (amount > accntCheq) {
+                    pTranactionLog.innerHTML = "Insufficient funds!";
+                } else {
+                    accntCheq = accntCheq - amount; // remove amount from the account
+                    pTranactionLog.innerHTML = "Withdraw: -$" + amount.toFixed(2) + " from Chequing";
+                }
+            } else if (accntSelector.value == "Savings") {
+                // We check that the amout to withdraw is not more than the balance in the account, here we use the savings balance
+                if (amount > accntSave) {
+                    pTranactionLog.innerHTML = "Insufficient funds!";
+                } else {
+                    accntSave = accntSave - amount; // remove amount from the account
+                    pTranactionLog.innerHTML = "Withdraw: -$" + amount.toFixed(2) + " from Savings";
+                }
+            }
+
+            // Again, we can call this function we made to display the current value of whatever account is selected to the webpage
+            displayAccountInfo();
+        }
+    </script>
+
+</body>
+
+</html>
